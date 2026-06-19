@@ -41,6 +41,18 @@ if (process.env.FRONTEND_ORIGIN) {
   allowedOrigins.add(process.env.FRONTEND_ORIGIN);
 }
 
+function isAllowedOrigin(origin) {
+  if (!origin || allowedOrigins.has(origin)) {
+    return true;
+  }
+
+  if (isProduction && /^https:\/\/[a-z0-9-]+\.onrender\.com$/i.test(origin)) {
+    return true;
+  }
+
+  return false;
+}
+
 app.set('trust proxy', 1);
 
 // 這裡集中設定後端共用中介層，例如 CORS、JSON 解析與靜態資源。
@@ -49,7 +61,7 @@ app.use(logger('dev'));
 app.use(
 	cors({
 		origin(origin, callback) {
-			if (!origin || allowedOrigins.has(origin)) {
+			if (isAllowedOrigin(origin)) {
 				callback(null, true);
 				return;
 			}
