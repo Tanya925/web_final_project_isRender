@@ -8,8 +8,8 @@ import express from 'express'  // 引入 Express 框架，讓我們可以建立�
 // Express 提供：const router = express.Router()，讓每個功能自己管理自己的 API
 const router = express.Router()  
 
-// 根路徑只提供一個簡單訊息，用來確認後端有正常啟動。
-router.get('/', (req, res) => {
+// 提供一個簡單的健康檢查 API，讓部署後可以確認後端有正常啟動。
+router.get('/health', (req, res) => {
   res.json({
     message: 'SDGs backend is running',
     sdgsApi: '/api/sdgs',

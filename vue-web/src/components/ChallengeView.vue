@@ -4,7 +4,7 @@
 
 <script setup>
 import { nextTick, onMounted, ref } from 'vue'  // Vue 3 的 Composition API，onMounted 是一個生命週期函式，ref 用來定義響應式資料(會變動的資料)，nextTick 用來在資料更新後等待畫面重新渲染。
-import axios from 'axios'  // 用來跟後端 API 溝通的 HTTP 客戶端
+import api from '../lib/api.js'  // 用來跟後端 API 溝通的 HTTP 客戶端
 
 // 代表目前登入的使用者資料，從父元件 App.vue 傳進來，包含 userId、username、currentPoints 等欄位。
 const props = defineProps({
@@ -67,10 +67,10 @@ function applyChallengeData(data) {
 // 重新抓取目前使用者的挑戰資料與最新積分。
 async function fetchChallenges() {
     // 利用 listRenderKey 強制重繪整個列表
-    listRenderKey.value += 1
+  listRenderKey.value += 1
   const [challengeRes, userRes] = await Promise.all([
-    axios.get('http://localhost:3000/api/challenges', { withCredentials: true }),
-    axios.get('http://localhost:3000/users/me', { withCredentials: true }),
+    api.get('/api/challenges'),
+    api.get('/users/me'),
   ])
 
   applyChallengeData(challengeRes.data)  // 把任務資料套用到畫面上
@@ -85,10 +85,9 @@ async function completeChallenge(challengeId) {
   bonusMessage.value = ''
 
   try {
-    const res = await axios.post(
-      'http://localhost:3000/api/challenges/complete',
+    const res = await api.post(
+      '/api/challenges/complete',
       { challengeId },
-      { withCredentials: true },
     )
 
     if (res.data.canReset) {
@@ -121,7 +120,7 @@ async function resetChallenges() {
   bonusMessage.value = ''
 
   try {
-    const res = await axios.post('http://localhost:3000/api/challenges/reset', {}, { withCredentials: true })
+    const res = await api.post('/api/challenges/reset', {})
 
     bonusMessage.value = `全部任務完成，額外獲得 ${res.data.bonusAwarded} 分，任務已重新刷新。`
     emit('user-updated', res.data.user)

@@ -4,6 +4,9 @@ node_modules/
 dist/
 **/dist/
 
+data.db
+.env
+
 .DS_Store
 Thumbs.db
 

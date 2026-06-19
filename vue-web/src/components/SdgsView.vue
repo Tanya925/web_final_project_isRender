@@ -5,7 +5,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'  // Vue 3 的 Composition API，onMounted 是一個生命週期函式，ref 用來定義響應式資料(會變動的資料)
-import axios from 'axios'  // 用來跟後端 API 溝通的 HTTP 客戶端
+import api from '../lib/api.js'  // 用來跟後端 API 溝通的 HTTP 客戶端
 
 import SdgsCard from './SdgsCard.vue'  // 匯入 SDG 單個卡牌元件，這樣才能在 template 裡面使用 <SdgsCard> 標籤來顯示每個 SDG 的卡牌。
 
@@ -17,7 +17,7 @@ const error = ref('')  // 用來顯示錯誤訊息，如果有任何 API 請求�
 async function loadSdgs() {
   try {
     // 呼叫後端 API 取得 17 筆 SDGs 資料，預期會得到一個陣列，每個元素包含 SDG 的編號、中文標題、描述等欄位。
-    const res = await axios.get('http://localhost:3000/api/sdgs')
+    const res = await api.get('/api/sdgs')
     // 現在資料庫的 title 已經直接存中英文合併內容，前端只要直接接資料即可。
     sdgs.value = res.data
   } catch (err) {
@@ -80,8 +80,8 @@ onMounted(() => {
 
 .card-grid {
   display: grid;
-  /* 把每張卡牌的最小寬度拉大，讓較長的中英文標題有更多空間可以顯示。 */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* 把每張卡牌的寬度再放大，讓背面較長介紹更容易完整呈現。 */
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 22px;
 }
 

@@ -1,0 +1,17 @@
+{
+  "name": "web-final-project-isrender",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "myexpressWeb",
+    "vue-web"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace vue-web",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
